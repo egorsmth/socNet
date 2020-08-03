@@ -22,7 +22,7 @@ public class MainInitializer implements ServletContextListener {
 
         PropertyConfigurator.configure(fullPath);
 
-        connectDb();
+        //connectDb();
     }
 
     @Override
