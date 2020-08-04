@@ -7,7 +7,7 @@
 
   <servlet>
     <servlet-name>helloTest</servlet-name>
-    <servlet-class>HelloTest</servlet-class>
+    <servlet-class>socnet.servlet.HelloTest</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -16,7 +16,7 @@
   </servlet-mapping>
 
   <listener>
-    <listener-class>MainInitializer</listener-class>
+    <listener-class>socnet.MainInitializer</listener-class>
   </listener>
 
   <context-param>

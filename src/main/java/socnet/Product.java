@@ -1,6 +1,8 @@
+package socnet;
+
 public class Product {
     private String name;
-    Product(String name) {
+    public Product(String name) {
         this.setName(name);
     }
 

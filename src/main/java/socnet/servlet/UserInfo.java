@@ -1,23 +1,22 @@
+package socnet.servlet;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import socnet.Product;
+import socnet.User;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 
-public class HelloTest extends HttpServlet {
-    static final Logger LOGGER = LoggerFactory.getLogger(String.valueOf(HelloTest.class));
-
-
+public class UserInfo extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LOGGER.info("request received");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         Writer pw = resp.getWriter();
 
@@ -29,10 +28,9 @@ public class HelloTest extends HttpServlet {
         cfg.setWrapUncheckedExceptions(true);
         cfg.setFallbackOnNullLoopVariable(false);
 
-        User u = new User("average Joe", new Product("simple product"));
-        Template temp = cfg.getTemplate("test.ftl");
+        Template temp = cfg.getTemplate("userInfo.ftl");
         try {
-            temp.process(u, pw);
+            temp.process(null, pw);
         } catch (TemplateException e) {
             e.printStackTrace();
         }

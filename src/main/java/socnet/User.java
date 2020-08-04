@@ -1,9 +1,15 @@
+package socnet;
+
 public class User {
     private String name;
     private Product product;
-    User(String name, Product p) {
+    public User(String name, Product p) {
         this.setName(name);
         this.setProduct(p);
+    }
+
+    public User(String name) {
+        this.setName(name);
     }
 
     public String getName() {

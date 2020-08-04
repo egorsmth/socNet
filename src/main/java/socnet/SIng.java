@@ -1,3 +1,5 @@
+package socnet;
+
 public class SIng {
     private static SIng i;
     private String a = "";

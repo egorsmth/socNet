@@ -1,3 +1,5 @@
+package socnet;
+
 import org.apache.log4j.PropertyConfigurator;
 
 import javax.servlet.ServletContext;
