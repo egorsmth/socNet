@@ -26,4 +26,19 @@ public class UserDAO {
         }
         return u;
     }
+
+    public User auth(String qname, String pass) {
+        User u = null;
+        try (
+                Statement stmt = c.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT id, name from users where name=" + qname + " and password=" + pass)
+        ) {
+            String name = rs.getString("name");
+            String id = rs.getString("id");
+            u = new User(id, name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return u;
+    }
 }

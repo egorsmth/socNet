@@ -3,6 +3,8 @@ package socnet.servlet;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import socnet.User;
+import socnet.db.UserDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,9 +49,12 @@ public class Login extends HttpServlet {
         String name = req.getParameter("name");
         String pass = req.getParameter("password");
 
-        if (name != null && pass != null)
+        UserDAO userDAO = new UserDAO((Connection) this.getServletContext().getAttribute("connectionDb"));
+        User user = userDAO.auth(name, pass);
+        if (user != null)
         {
-            resp.sendRedirect(req.getContextPath() + "/test");
+            req.getSession().setAttribute("user_id", user.getId());
+            resp.sendRedirect(req.getContextPath() + "/userInfo");
         }
     }
 }
