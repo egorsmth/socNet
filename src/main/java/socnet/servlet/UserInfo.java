@@ -3,9 +3,6 @@ package socnet.servlet;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import socnet.Product;
-import socnet.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,13 +17,8 @@ public class UserInfo extends HttpServlet {
         resp.setContentType("text/html");
         Writer pw = resp.getWriter();
 
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
-        cfg.setServletContextForTemplateLoading(this.getServletContext(), "WEB-INF");
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
-        cfg.setLogTemplateExceptions(false);
-        cfg.setWrapUncheckedExceptions(true);
-        cfg.setFallbackOnNullLoopVariable(false);
+        Configuration cfg = (Configuration) this.getServletContext().getAttribute("templates");
+
 
         Template temp = cfg.getTemplate("userInfo.ftl");
         try {
