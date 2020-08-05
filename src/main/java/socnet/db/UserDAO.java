@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 public class UserDAO {
     private final Connection c;
@@ -13,7 +14,7 @@ public class UserDAO {
         this.c = dbconn;
     }
 
-    public User findById(String id) {
+    public Optional<User> findById(String id) {
         User u = null;
         try (
                 Statement stmt = c.createStatement();
@@ -24,10 +25,10 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return u;
+        return Optional.of(u);
     }
 
-    public User auth(String qname, String pass) {
+    public Optional<User> auth(String qname, String pass) {
         User u = null;
         try (
                 Statement stmt = c.createStatement();
@@ -39,6 +40,6 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return u;
+        return Optional.of(u);
     }
 }

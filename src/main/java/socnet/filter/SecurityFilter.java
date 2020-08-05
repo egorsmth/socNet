@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import socnet.User;
 
@@ -31,15 +32,15 @@ public class SecurityFilter implements Filter {
         String path = req.getServletPath();
         String userId = SecurityUtils.getUserId(req.getSession());
         UserDAO userDAO = new UserDAO((Connection) req.getServletContext().getAttribute("dbConnection"));
-        User user = userDAO.findById(userId);
+        Optional<User> user = userDAO.findById(userId);
 
-        if (path.startsWith("/login") && user != null)
+        if (path.startsWith("/login") && user.isPresent())
         {
             res.sendRedirect(req.getContextPath() + "/userInfo");
             return;
         }
 
-        boolean canVisit = SecurityUtils.getPagePermission(path, user);
+        boolean canVisit = SecurityUtils.getPagePermission(path, user.get());
         if (canVisit) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
