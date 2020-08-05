@@ -32,7 +32,8 @@ public class UserDAO {
         User u = null;
         try (
                 Statement stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT id, name from users where name=" + qname + " and password=" + pass)
+                ResultSet rs = stmt.executeQuery(
+                        "SELECT id, name from users where name=" + qname + " and password=" + pass)
         ) {
             String name = rs.getString("name");
             String id = rs.getString("id");
@@ -41,5 +42,20 @@ public class UserDAO {
             e.printStackTrace();
         }
         return Optional.of(u);
+    }
+
+    public User register(String name, String pass) {
+        User u = null;
+        try (
+                Statement stmt = c.createStatement();
+                ResultSet rs = stmt.executeQuery(
+                        "INSERT INTO users(name, password) VALUES(" + name + ", " + pass + ") RETURNING id");
+        ) {
+            String id = rs.getString(1);
+            u = new User(id, name);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return u;
     }
 }
