@@ -5,7 +5,9 @@ import java.sql.*;
 public class Db {
 
     private Db() {}
+
     private static Connection c;
+
     public static void Init(String host, String user, String pass, String db) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         c = DriverManager.getConnection(

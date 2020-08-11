@@ -34,7 +34,7 @@ public class MainInitializer implements ServletContextListener {
         context.setAttribute("dbConnection", c);
 
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
-        cfg.setServletContextForTemplateLoading(context, "WEB-INF");
+        cfg.setServletContextForTemplateLoading(context, "WEB-INF/templates");
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
         cfg.setLogTemplateExceptions(false);
