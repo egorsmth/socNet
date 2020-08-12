@@ -61,6 +61,11 @@
       <artifactId>freemarker</artifactId>
       <version>2.3.30</version>
     </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>8.0</version>
+    </dependency>
 
   </dependencies>
 
