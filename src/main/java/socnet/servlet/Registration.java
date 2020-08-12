@@ -3,8 +3,9 @@ package socnet.servlet;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import socnet.User;
-import socnet.db.UserDAO;
+import socnet.entities.User;
+import socnet.entities.services.UserService;
+import socnet.utils.SecurityUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -42,10 +42,12 @@ public class Registration extends HttpServlet {
         String name = req.getParameter("name");
         String pass = req.getParameter("password");
 
-        UserDAO userDAO = new UserDAO((Connection) this.getServletContext().getAttribute("connectionDb"));
-        User user = userDAO.register(name, pass);
+        UserService us = (UserService) this.getServletContext().getAttribute("userService");
+        Optional<User> user = SecurityUtils.register(name, pass, us);
 
-        req.getSession().setAttribute("user_id", user.getId());
-        resp.sendRedirect(req.getContextPath() + "/userInfo");
+        if (user.isPresent()) {
+            req.getSession().setAttribute("user_id", user.get().getId());
+            resp.sendRedirect(req.getContextPath() + "/userInfo");
+        }
     }
 }

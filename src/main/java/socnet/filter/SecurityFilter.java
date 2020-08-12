@@ -5,13 +5,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import socnet.User;
-
-import socnet.db.UserDAO;
+import socnet.entities.User;
+import socnet.entities.services.UserService;
 import socnet.utils.SecurityUtils;
 
 @WebFilter("/*")
@@ -30,9 +27,9 @@ public class SecurityFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
         String path = req.getServletPath();
-        String userId = SecurityUtils.getUserId(req.getSession());
-        UserDAO userDAO = new UserDAO((Connection) req.getServletContext().getAttribute("dbConnection"));
-        Optional<User> user = userDAO.findById(userId);
+        int userId = Integer.parseInt(SecurityUtils.getUserId(req.getSession()));
+        UserService userService = (UserService) req.getServletContext().getAttribute("userService");
+        Optional<User> user = userService.findById(userId);
 
         if (path.startsWith("/login") && user.isPresent())
         {
@@ -40,11 +37,14 @@ public class SecurityFilter implements Filter {
             return;
         }
 
+        if (!user.isPresent())
+        {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
         boolean canVisit = SecurityUtils.getPagePermission(path, user.get());
         if (canVisit) {
             filterChain.doFilter(servletRequest, servletResponse);
-            return;
         }
-        res.sendRedirect(req.getContextPath() + "/login");
     }
 }

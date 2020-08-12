@@ -5,14 +5,15 @@ import freemarker.template.TemplateExceptionHandler;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socnet.db.Db;
+import socnet.entities.services.UserService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class MainInitializer implements ServletContextListener {
 
@@ -24,14 +25,12 @@ public class MainInitializer implements ServletContextListener {
 
         PropertyConfigurator.configure(fullPath);
         Logger Logger = LoggerFactory.getLogger(String.valueOf(MainInitializer.class));
-        try {
-            Db.Init("localhost:5432", "admin", "1234", "testdb");
-        } catch (ClassNotFoundException | SQLException e) {
-            Logger.error(e.getMessage());
-            System.exit(e.hashCode());
-        }
-        Connection c = Db.getConnection();
-        context.setAttribute("dbConnection", c);
+
+        EntityManagerFactory emf =
+                Persistence.createEntityManagerFactory("EmployeeService");
+        EntityManager em = emf.createEntityManager();
+        UserService service = new UserService(em);
+        context.setAttribute("userService", service);
 
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
         cfg.setServletContextForTemplateLoading(context, "WEB-INF/templates");
@@ -45,15 +44,6 @@ public class MainInitializer implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        Connection c = Db.getConnection();
-        Logger Logger = LoggerFactory.getLogger(String.valueOf(MainInitializer.class));
-
-        try {
-            c.close();
-        } catch (SQLException e) {
-            Logger.error(e.getMessage());
-            System.exit(e.hashCode());
-        }
     }
 
 //    private Connection connectDb()

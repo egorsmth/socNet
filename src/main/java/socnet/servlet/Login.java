@@ -3,8 +3,9 @@ package socnet.servlet;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import socnet.User;
-import socnet.db.UserDAO;
+import socnet.entities.User;
+import socnet.entities.services.UserService;
+import socnet.utils.SecurityUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,8 +51,9 @@ public class Login extends HttpServlet {
         String name = req.getParameter("name");
         String pass = req.getParameter("password");
 
-        UserDAO userDAO = new UserDAO((Connection) this.getServletContext().getAttribute("connectionDb"));
-        Optional<User> user = userDAO.auth(name, pass);
+        UserService us = (UserService) this.getServletContext().getAttribute("userService");
+        Optional<User> user = SecurityUtils.auth(name, pass, us);
+        SecurityUtils.auth(name, pass, us);
         if (user.isPresent())
         {
             req.getSession().setAttribute("user_id", user.get().getId());
