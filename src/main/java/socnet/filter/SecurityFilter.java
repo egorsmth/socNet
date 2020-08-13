@@ -27,22 +27,18 @@ public class SecurityFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
         String path = req.getServletPath();
-        int userId = Integer.parseInt(SecurityUtils.getUserId(req.getSession()));
-        UserService userService = (UserService) req.getServletContext().getAttribute("userService");
-        Optional<User> user = userService.findById(userId);
 
-        if (path.startsWith("/login") && user.isPresent())
-        {
-            res.sendRedirect(req.getContextPath() + "/userInfo");
-            return;
+        Optional<User> user = Optional.empty();
+        String id = (String) req.getSession().getAttribute("user_id");
+        if (id != null) {
+            Optional<Integer> userId = SecurityUtils.decodeUserId(id);
+            if (userId.isPresent()) {
+                UserService userService = (UserService) req.getServletContext().getAttribute("userService");
+                user = userService.findById(userId.get());
+            }
         }
 
-        if (!user.isPresent())
-        {
-            res.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-        boolean canVisit = SecurityUtils.getPagePermission(path, user.get());
+        boolean canVisit = SecurityUtils.getPagePermission(path, user);
         if (canVisit) {
             filterChain.doFilter(servletRequest, servletResponse);
         }

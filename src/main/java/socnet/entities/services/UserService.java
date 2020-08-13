@@ -2,17 +2,17 @@ package socnet.entities.services;
 
 import socnet.entities.User;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+@Stateless
 public class UserService {
+    @PersistenceContext(unitName = "UserService")
     protected EntityManager em;
-
-    public UserService(EntityManager em) {
-        this.em = em;
-    }
 
     public User createUser(int id, String name, String password) {
         User u = new User();
@@ -42,7 +42,7 @@ public class UserService {
     public User findOne(String name, String pass) {
         // TODO: 8/12/2020 make query 
         TypedQuery<User> query = em.createQuery(
-                "SELECT * FROM User WHERE name= pass=", User.class);
-        return query.getResultList();
+                String.format("SELECT * FROM User WHERE name=%s AND pass=%s LIMIT 1", name, pass), User.class);
+        return query.getResultList().get(0);
     }
 }

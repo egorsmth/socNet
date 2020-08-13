@@ -3,34 +3,22 @@ package socnet;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.log4j.PropertyConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import socnet.entities.services.UserService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.io.File;
 
+@WebListener
 public class MainInitializer implements ServletContextListener {
-
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
-        String log4jConfigFile = context.getInitParameter("log4j-config-location");
+        String log4jConfigFile = "WEB-INF/log4j.properties";
         String fullPath = context.getRealPath("") + File.separator + log4jConfigFile;
 
         PropertyConfigurator.configure(fullPath);
-        Logger Logger = LoggerFactory.getLogger(String.valueOf(MainInitializer.class));
-
-        EntityManagerFactory emf =
-                Persistence.createEntityManagerFactory("EmployeeService");
-        EntityManager em = emf.createEntityManager();
-        UserService service = new UserService(em);
-        context.setAttribute("userService", service);
 
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
         cfg.setServletContextForTemplateLoading(context, "WEB-INF/templates");

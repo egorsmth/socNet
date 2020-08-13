@@ -3,21 +3,19 @@ package socnet.utils;
 import socnet.entities.User;
 import socnet.entities.services.UserService;
 
-import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class SecurityUtils {
-    public static String getUserId(HttpSession session) {
+    public static Optional<Integer> decodeUserId(String userIdEncrypted) {
         // TODO: use cryptography
-        String userIdEncrypted = (String) session.getAttribute("user_id");
         if (userIdEncrypted == null) {
-            throw new NoSuchElementException();
+            return Optional.empty();
         }
-        return userIdEncrypted;
+        return Optional.of(Integer.parseInt(userIdEncrypted));
     }
 
-    public static boolean getPagePermission(String path, User user) {
+    public static boolean getPagePermission(String path, Optional<User> user) {
         // TODO: implement permission management
         return true;
     }

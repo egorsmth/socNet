@@ -7,7 +7,9 @@ import socnet.entities.User;
 import socnet.entities.services.UserService;
 import socnet.utils.SecurityUtils;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@WebServlet("/registration")
 public class Registration extends HttpServlet {
+    @EJB
+    UserService us;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
@@ -42,7 +48,6 @@ public class Registration extends HttpServlet {
         String name = req.getParameter("name");
         String pass = req.getParameter("password");
 
-        UserService us = (UserService) this.getServletContext().getAttribute("userService");
         Optional<User> user = SecurityUtils.register(name, pass, us);
 
         if (user.isPresent()) {
