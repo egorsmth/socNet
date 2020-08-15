@@ -9,6 +9,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebListener
 public class MainInitializer implements ServletContextListener {
@@ -28,6 +30,9 @@ public class MainInitializer implements ServletContextListener {
         cfg.setWrapUncheckedExceptions(true);
         cfg.setFallbackOnNullLoopVariable(false);
         context.setAttribute("templates", cfg);
+
+        Map<String, String[]> perms = new HashMap<>();
+        context.setAttribute("permissions", perms);
     }
 
     @Override

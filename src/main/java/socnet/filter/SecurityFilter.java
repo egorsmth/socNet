@@ -25,8 +25,6 @@ public class SecurityFilter implements Filter {
             FilterChain filterChain
     ) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        HttpServletResponse res = (HttpServletResponse) servletResponse;
-        String path = req.getServletPath();
 
         Optional<User> user = Optional.empty();
         String id = (String) req.getSession().getAttribute("user_id");
@@ -38,9 +36,11 @@ public class SecurityFilter implements Filter {
             }
         }
 
-        boolean canVisit = SecurityUtils.getPagePermission(path, user);
+        boolean canVisit = SecurityUtils.getPagePermission(req, user);
         if (canVisit) {
             filterChain.doFilter(servletRequest, servletResponse);
+            return;
         }
+        ((HttpServletResponse) servletResponse).sendRedirect("login");
     }
 }

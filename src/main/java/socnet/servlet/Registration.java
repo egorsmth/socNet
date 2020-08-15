@@ -5,6 +5,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import socnet.entities.User;
 import socnet.entities.services.UserService;
+import socnet.utils.Roles;
 import socnet.utils.SecurityUtils;
 
 import javax.ejb.EJB;
@@ -20,10 +21,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/registration")
-public class Registration extends HttpServlet {
+public class Registration extends PredefinedContextServlet {
     @EJB
     UserService us;
 
+    @Perms({Roles.NON_AUTH})
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
@@ -43,6 +45,7 @@ public class Registration extends HttpServlet {
         pw.close();
     }
 
+    @Perms({Roles.NON_AUTH})
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");

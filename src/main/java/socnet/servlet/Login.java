@@ -5,9 +5,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import socnet.entities.User;
 import socnet.entities.services.UserService;
+import socnet.utils.Roles;
 import socnet.utils.SecurityUtils;
 
 import javax.ejb.EJB;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,9 +22,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/login")
-public class Login extends HttpServlet {
+public class Login extends PredefinedContextServlet {
     @EJB UserService us;
 
+    @Perms({Roles.NON_AUTH})
     @Override
     protected void doGet(
             HttpServletRequest req,
@@ -45,6 +48,7 @@ public class Login extends HttpServlet {
         pw.close();
     }
 
+    @Perms({Roles.NON_AUTH})
     @Override
     protected void doPost(
             HttpServletRequest req,
