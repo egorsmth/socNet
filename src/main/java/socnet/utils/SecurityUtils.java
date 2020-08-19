@@ -33,6 +33,8 @@ public class SecurityUtils {
                 return true;
             } else if (Arrays.asList(roles).contains(Roles.ANY)) {
                 return true;
+            } else if (!user.isPresent() && Arrays.asList(roles).contains(Roles.NON_AUTH)) {
+                return true;
             } else {
                 return false;
             }
@@ -42,7 +44,8 @@ public class SecurityUtils {
 
     public static Optional<User> auth(String name, String pass, UserService us) {
         User u = us.findOne(name, pass);
-        return Optional.of(u);
+
+        return Optional.ofNullable(u);
     }
 
     public static Optional<User> register(String name, String pass, UserService us) {

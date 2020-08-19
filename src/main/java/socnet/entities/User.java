@@ -2,12 +2,13 @@ package socnet.entities;
 
 import socnet.utils.Roles;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
+@Table(name = "soc_user")
 public class User {
-    @Id private int id;
+    @Id private long id;
 
     private String name;
 
@@ -15,11 +16,11 @@ public class User {
 
     private Roles[] roles;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -46,4 +47,16 @@ public class User {
     public void setRoles(Roles[] roles) {
         this.roles = roles;
     }
+
+    @ElementCollection(targetClass=Friendship.class)
+    @CollectionTable(
+            name="friendship",
+            joinColumns=@JoinColumn(name="user_a"))
+    private Set<Friendship> sent;
+
+    @ElementCollection(targetClass=Friendship.class)
+    @CollectionTable(
+            name="friendship",
+            joinColumns=@JoinColumn(name="user_b"))
+    private Set<Friendship> received;
 }

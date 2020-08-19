@@ -6,6 +6,7 @@ import socnet.utils.Roles;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -43,8 +44,15 @@ public class UserService {
 
     public User findOne(String name, String pass) {
         // TODO: 8/12/2020 make query 
-        TypedQuery<User> query = em.createQuery(
-                String.format("SELECT * FROM User WHERE name=%s AND pass=%s LIMIT 1", name, pass), User.class);
-        return query.getResultList().get(0);
+        Query query = em.createQuery(
+                "SELECT e FROM User e WHERE e.name = :name AND e.password = :pass",
+                User.class)
+                .setParameter("name", name)
+                .setParameter("pass", pass);
+        List res = query.getResultList();
+        if (res.isEmpty()) {
+            return null;
+        }
+        return (User) res.get(0);
     }
 }

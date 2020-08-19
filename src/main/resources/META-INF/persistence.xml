@@ -7,5 +7,9 @@
     <persistence-unit name="UserService">
         <jta-data-source>jdbc/testdb</jta-data-source>
         <class>socnet.entities.User</class>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action"
+                      value="drop-and-create"/>
+        </properties>
     </persistence-unit>
 </persistence>
