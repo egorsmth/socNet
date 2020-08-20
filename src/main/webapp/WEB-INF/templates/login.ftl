@@ -7,6 +7,9 @@
     <input type="text" name="password">
     <input type="submit" value="Login">
   </form>
+  <p>
+    <a href="${registrationUrl}">registration</a>
+  </p>
 
 </body>
 </html>

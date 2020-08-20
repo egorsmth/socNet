@@ -1,5 +1,6 @@
 package socnet.filter;
 
+import javax.ejb.EJB;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,9 @@ import socnet.utils.SecurityUtils;
 
 @WebFilter("/*")
 public class SecurityFilter implements Filter {
+    @EJB
+    UserService us;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -29,10 +33,9 @@ public class SecurityFilter implements Filter {
         Optional<User> user = Optional.empty();
         String id = (String) req.getSession().getAttribute("user_id");
         if (id != null) {
-            Optional<Integer> userId = SecurityUtils.decodeUserId(id);
+            Optional<Long> userId = SecurityUtils.decodeUserId(id);
             if (userId.isPresent()) {
-                UserService userService = (UserService) req.getServletContext().getAttribute("userService");
-                user = userService.findById(userId.get());
+                user = us.findById(userId.get());
             }
         }
 
@@ -41,6 +44,10 @@ public class SecurityFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        ((HttpServletResponse) servletResponse).sendRedirect("login");
+        if (!user.isPresent()) {
+            ((HttpServletResponse) servletResponse).sendRedirect("login");
+        } else {
+            ((HttpServletResponse) servletResponse).sendRedirect("personal");
+        }
     }
 }

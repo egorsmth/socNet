@@ -11,12 +11,12 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SecurityUtils {
-    public static Optional<Integer> decodeUserId(String userIdEncrypted) {
+    public static Optional<Long> decodeUserId(String userIdEncrypted) {
         // TODO: use cryptography
         if (userIdEncrypted == null) {
             return Optional.empty();
         }
-        return Optional.of(Integer.parseInt(userIdEncrypted));
+        return Optional.of(Long.parseLong(userIdEncrypted));
     }
 
     public static boolean getPagePermission(HttpServletRequest req, Optional<User> user) {
@@ -50,8 +50,12 @@ public class SecurityUtils {
 
     public static Optional<User> register(String name, String pass, UserService us) {
         // TODO: 8/12/2020 encrypt password
-        User u = us.createUser(1, name, pass, new Roles[]{Roles.AUTH});
+        User u = us.createUser(name, pass, new Roles[]{Roles.AUTH});
         return Optional.of(u);
     }
 
+    public static String encodeUserId(long id) {
+        // TODO: encrypt user id
+        return String.valueOf(id);
+    }
 }

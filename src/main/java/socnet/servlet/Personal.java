@@ -15,46 +15,39 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-@WebServlet("/registration")
-public class Registration extends PredefinedContextServlet {
+@WebServlet("/personal")
+public class Personal extends PredefinedContextServlet {
     @EJB
     UserService us;
 
-    @Perms({Roles.NON_AUTH})
+    @Perms({Roles.AUTH})
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String userEncId = (String) req.getSession().getAttribute("user_id");
+        Optional<Long> userId = SecurityUtils.decodeUserId(userEncId);
+        if (!userId.isPresent()) {
+            throw new RuntimeException("Wrong user id in session");
+        }
+        Optional<User> u = us.findById(userId.get());
+        if (!u.isPresent()) {
+            throw new RuntimeException("User not found in db");
+        }
+
         resp.setContentType("text/html");
         Writer pw = resp.getWriter();
 
         Configuration cfg = (Configuration) this.getServletContext().getAttribute("templates");
 
-        Template temp = cfg.getTemplate("registration.ftl");
+
+        Template temp = cfg.getTemplate("personal.ftl");
         try {
-            Map<String, String> o = new HashMap<>();
-            o.put("actionUrl", req.getContextPath() + "/registration");
-            temp.process(o, pw);
+            temp.process(u.get(), pw);
         } catch (TemplateException e) {
             e.printStackTrace();
         }
 
         pw.close();
-    }
-
-    @Perms({Roles.NON_AUTH})
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String pass = req.getParameter("password");
-
-        Optional<User> user = SecurityUtils.register(name, pass, us);
-
-        if (user.isPresent()) {
-            req.getSession().setAttribute("user_id", SecurityUtils.encodeUserId(user.get().getId()));
-            resp.sendRedirect(req.getContextPath() + "/personal");
-        }
     }
 }

@@ -2,7 +2,7 @@
 <html>
 <body>
   <@pnav.pnav "/logout" "/home"/>
-  <h1>user Info</h1>
+  <h1>Personal</h1>
     <p>${name}</p>
 </body>
 </html>

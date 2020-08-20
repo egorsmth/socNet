@@ -40,6 +40,7 @@ public class Login extends PredefinedContextServlet {
         try {
             Map<String, String> o = new HashMap<>();
             o.put("actionUrl", req.getContextPath() + "/login");
+            o.put("registrationUrl", req.getContextPath() + "/registration");
             temp.process(o, pw);
         } catch (TemplateException e) {
             e.printStackTrace();
@@ -61,8 +62,8 @@ public class Login extends PredefinedContextServlet {
         SecurityUtils.auth(name, pass, us);
         if (user.isPresent())
         {
-            req.getSession().setAttribute("user_id", user.get().getId());
-            resp.sendRedirect(req.getContextPath() + "/userInfo");
+            req.getSession().setAttribute("user_id", String.valueOf(user.get().getId()));
+            resp.sendRedirect(req.getContextPath() + "/personal");
         }
     }
 }

@@ -16,9 +16,8 @@ public class UserService {
     @PersistenceContext(unitName = "UserService")
     protected EntityManager em;
 
-    public User createUser(int id, String name, String password, Roles[] roles) {
+    public User createUser(String name, String password, Roles[] roles) {
         User u = new User();
-        u.setId(id);
         u.setName(name);
         u.setPassword(password);
         u.setRoles(roles);
@@ -26,12 +25,12 @@ public class UserService {
         return u;
     }
 
-    public void removeUser(int id) {
+    public void removeUser(long id) {
         Optional<User> u = this.findById(id);
         u.ifPresent(user -> em.remove(user));
     }
 
-    public Optional<User> findById(int id) {
+    public Optional<User> findById(long id) {
         User u = em.find(User.class, id);
         return Optional.of(u);
     }
