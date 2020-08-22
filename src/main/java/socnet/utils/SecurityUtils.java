@@ -1,14 +1,9 @@
 package socnet.utils;
 
 import socnet.entities.User;
-import socnet.entities.services.UserService;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 public class SecurityUtils {
     public static Optional<Long> decodeUserId(String userIdEncrypted) {
@@ -19,12 +14,9 @@ public class SecurityUtils {
         return Optional.of(Long.parseLong(userIdEncrypted));
     }
 
-    public static boolean getPagePermission(HttpServletRequest req, Optional<User> user) {
-        Map<String, Roles[]> perms = (Map<String, Roles[]>) req.getServletContext().getAttribute("permissions");
-        String n = req.getHttpServletMapping().getServletName();
-        n += "-" + req.getMethod();
-        if (perms.containsKey(n)) {
-            Roles[] roles = perms.get(n);
+    public static boolean getPagePermission(Map<String, Roles[]> perms, String permissionName, Optional<User> user) {
+        if (perms.containsKey(permissionName)) {
+            Roles[] roles = perms.get(permissionName);
             HashSet<Roles> set1 = new HashSet<>(Arrays.asList(roles));
             HashSet<Roles> set2 = new HashSet<>();
             user.ifPresent(u -> set2.addAll(Arrays.asList(u.getRoles())));
@@ -40,18 +32,6 @@ public class SecurityUtils {
             }
         }
         return true;
-    }
-
-    public static Optional<User> auth(String name, String pass, UserService us) {
-        User u = us.findOne(name, pass);
-
-        return Optional.ofNullable(u);
-    }
-
-    public static Optional<User> register(String name, String pass, UserService us) {
-        // TODO: 8/12/2020 encrypt password
-        User u = us.createUser(name, pass, new Roles[]{Roles.AUTH});
-        return Optional.of(u);
     }
 
     public static String encodeUserId(long id) {

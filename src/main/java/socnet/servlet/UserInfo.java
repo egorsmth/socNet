@@ -4,7 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import socnet.entities.User;
-import socnet.entities.services.UserService;
+import socnet.services.UserService;
 import socnet.utils.Roles;
 
 import javax.ejb.EJB;
@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/userInfo")
@@ -24,6 +26,11 @@ public class UserInfo extends PredefinedContextServlet {
     @Perms({Roles.AUTH})
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getAttribute("user_obj");
+        if (user == null) {
+            throw new RuntimeException("User not found in session");
+        }
+
         long userId = Long.parseLong(req.getParameter("userId"));
         Optional<User> u = us.findById(userId);
         if (!u.isPresent()) {
@@ -32,12 +39,15 @@ public class UserInfo extends PredefinedContextServlet {
 
         resp.setContentType("text/html");
         Writer pw = resp.getWriter();
-
         Configuration cfg = (Configuration) this.getServletContext().getAttribute("templates");
-
         Template temp = cfg.getTemplate("userInfo.ftl");
         try {
-            temp.process(u.get(), pw);
+            Map<String, Object> dict = new HashMap<>();
+            dict.put("user", user);
+            dict.put("other_user", u.get());
+            dict.put("logoutUrl", req.getContextPath() + "/logout");
+            dict.put("homeUrl", req.getContextPath() + "/personal");
+            temp.process(dict, pw);
         } catch (TemplateException e) {
             e.printStackTrace();
         }

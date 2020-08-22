@@ -1,23 +1,17 @@
 package socnet.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@IdClass(FriendshipId.class)
 public class Friendship implements Serializable {
-    @Id private long id;
+    @Id
     private long user_a;
+    @Id
     private long user_b;
+
     private FriendshipStatus status;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public long getUser_a() {
         return user_a;

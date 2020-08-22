@@ -1,8 +1,8 @@
-package socnet.entities.services;
+package socnet.services;
 
 import socnet.entities.User;
-import socnet.utils.Roles;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,15 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateless
+@LocalBean
 public class UserService {
     @PersistenceContext(unitName = "UserService")
     protected EntityManager em;
 
-    public User createUser(String name, String password, Roles[] roles) {
-        User u = new User();
-        u.setName(name);
-        u.setPassword(password);
-        u.setRoles(roles);
+    public User createUser(User u) {
         em.persist(u);
         return u;
     }

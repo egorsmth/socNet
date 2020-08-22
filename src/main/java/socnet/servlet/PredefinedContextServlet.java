@@ -1,5 +1,6 @@
 package socnet.servlet;
 
+import socnet.utils.PermissionUtils;
 import socnet.utils.Roles;
 
 import javax.servlet.ServletContext;
@@ -11,15 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 public class PredefinedContextServlet extends HttpServlet {
-    private String methodToHttp(String method) {
-        switch (method) {
-            case "doGet":
-                return "GET";
-            case "doPost":
-                return "POST";
-        }
-        return "";
-    }
+
     @Override
     public void init() throws ServletException {
         ServletContext ctx = this.getServletContext();
@@ -35,7 +28,8 @@ public class PredefinedContextServlet extends HttpServlet {
                 a = m.getAnnotation(Perms.class);
                 if (a == null) continue;
                 Roles[] value = a.value();
-                perms.put(this.getServletName() + "-" + methodToHttp(method), value);
+                String n = PermissionUtils.getServletPermissionName(this.getServletName(), method);
+                perms.put(n, value);
             } catch (NoSuchMethodException ignored) { }
         }
         ctx.setAttribute("permissions", perms);

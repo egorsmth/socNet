@@ -66,6 +66,13 @@
       <artifactId>javaee-api</artifactId>
       <version>8.0</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.openejb/openejb-core -->
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-core</artifactId>
+      <version>4.7.5</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 

@@ -4,15 +4,12 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import socnet.entities.User;
-import socnet.entities.services.UserService;
+import socnet.services.AuthService;
 import socnet.utils.Roles;
-import socnet.utils.SecurityUtils;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,7 +20,8 @@ import java.util.Optional;
 
 @WebServlet("/login")
 public class Login extends PredefinedContextServlet {
-    @EJB UserService us;
+    @EJB
+    AuthService authService;
 
     @Perms({Roles.NON_AUTH})
     @Override
@@ -58,8 +56,8 @@ public class Login extends PredefinedContextServlet {
         String name = req.getParameter("name");
         String pass = req.getParameter("password");
 
-        Optional<User> user = SecurityUtils.auth(name, pass, us);
-        SecurityUtils.auth(name, pass, us);
+        Optional<User> user = authService.auth(name, pass);
+
         if (user.isPresent())
         {
             req.getSession().setAttribute("user_id", String.valueOf(user.get().getId()));

@@ -6,10 +6,13 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 import socnet.entities.User;
-import socnet.entities.services.UserService;
+import socnet.services.UserService;
+import socnet.utils.PermissionUtils;
+import socnet.utils.Roles;
 import socnet.utils.SecurityUtils;
 
 @WebFilter("/*")
@@ -38,8 +41,14 @@ public class SecurityFilter implements Filter {
                 user = us.findById(userId.get());
             }
         }
-
-        boolean canVisit = SecurityUtils.getPagePermission(req, user);
+        user.ifPresent(value -> req.setAttribute("user_obj", value));
+        String permName = PermissionUtils.getHttpPermissionName(
+                req.getHttpServletMapping().getServletName(),
+                req.getMethod());
+        boolean canVisit = SecurityUtils.getPagePermission(
+                (Map<String, Roles[]>) req.getServletContext().getAttribute("permissions"),
+                permName,
+                user);
         if (canVisit) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;

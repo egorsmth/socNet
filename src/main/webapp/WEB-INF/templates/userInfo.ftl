@@ -1,8 +1,8 @@
 <#import "profile_nav.ftl" as pnav>
 <html>
 <body>
-  <@pnav.pnav "/logout" "/home"/>
+  <@pnav.pnav logoutUrl homeUrl user.name/>
   <h1>user Info</h1>
-    <p>${name}</p>
+    <p>${other_user.name}</p>
 </body>
 </html>
