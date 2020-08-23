@@ -6,7 +6,10 @@
     <p>${user.name}</p>
     <#list friends as friend>
       <p>
-       <a href="userInfo?userId=${friend.id}"> <b>${friend.id}</b> ${friend.name} </a>
+       <b>${friend.getRelationStatusString()}</b>
+       <a href="userInfo?userId=${friend.user.id}">
+        <b>${friend.user.id}</b>
+       ${friend.user.name} </a>
       </p>
     </#list>
 </body>

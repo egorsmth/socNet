@@ -3,6 +3,7 @@ package socnet.servlet;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import socnet.entities.Friend;
 import socnet.entities.Friendship;
 import socnet.entities.User;
 import socnet.services.UserService;
@@ -42,7 +43,7 @@ public class Personal extends PredefinedContextServlet {
             dict.put("logoutUrl", req.getContextPath() + "/logout");
             dict.put("homeUrl", req.getContextPath() + "/personal");
 
-            Set<User> friends = us.getFriends(u);
+            Set<Friend> friends = us.getFriends(u);
             dict.put("friends", friends);
             temp.process(dict, pw);
         } catch (TemplateException e) {

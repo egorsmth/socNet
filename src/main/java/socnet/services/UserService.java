@@ -1,19 +1,35 @@
 package socnet.services;
 
+import socnet.entities.Friend;
 import socnet.entities.Friendship;
+import socnet.entities.FriendshipStatus;
 import socnet.entities.User;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.*;
 
+@SqlResultSetMapping(
+        name = "FriendResultSet",
+        entities = {
+                @EntityResult(
+                        entityClass = User.class,
+                        fields={
+                                @FieldResult(name="id",column="id"),
+                                @FieldResult(name="name", column="name"),
+                        }
+                ),
+                @EntityResult(
+                        entityClass = Friendship.class,
+                        fields={
+                                @FieldResult(name="user_a",column="user_a"),
+                                @FieldResult(name="user_b",column="user_b"),
+                                @FieldResult(name="status", column="status"),
+                        }
+                ),
+        }
+)
 @Stateless
 @LocalBean
 public class UserService {
@@ -54,12 +70,24 @@ public class UserService {
         return (User) res.get(0);
     }
 
-    public Set<User> getFriends(User u) {
-        Query query = em.createQuery(
-                "SELECT u FROM User u JOIN Friendship f ON f.user_a = :cur OR f.user_b = :cur WHERE u.id != :cur",
-                User.class)
-                .setParameter("cur", u.getId());
-        List res = query.getResultList();
-        return new HashSet<User>(res);
+
+    public Set<Friend> getFriends(User u) {
+        Query query = em.createNativeQuery(
+                "SELECT id, name, user_a, user_b, status FROM soc_user as u JOIN friendship as f ON f.user_a = ?1 OR f.user_b = ?1 " +
+                       "WHERE u.id <> ?1",
+                "FriendResultSet");
+        query = query.setParameter(1, u.getId());
+
+        List<Object[]> results = query.getResultList();
+        Set<Friend> hs = new HashSet<>();
+        for (Object[] x : results) {
+            User uu = new User((Integer) x[0], (String) x[1]);
+            Friendship f = new Friendship(
+                    (Long) x[2],
+                    (Long) x[3],
+                    FriendshipStatus.values()[(Integer)x[4]]);
+            hs.add(new Friend(uu, f));
+        }
+        return hs;
     }
 }

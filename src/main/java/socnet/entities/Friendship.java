@@ -13,6 +13,13 @@ public class Friendship implements Serializable {
 
     private FriendshipStatus status;
 
+    public Friendship() {}
+    public Friendship(long user_a, long user_b, FriendshipStatus status) {
+        this.user_a = user_a;
+        this.user_b = user_b;
+        this.status = status;
+    }
+
     public long getUser_a() {
         return user_a;
     }

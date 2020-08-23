@@ -25,6 +25,13 @@ public class User {
 
     private Roles[] roles;
 
+    public User() {}
+
+    public User(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }
