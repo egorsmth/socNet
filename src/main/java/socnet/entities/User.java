@@ -56,16 +56,4 @@ public class User {
     public void setRoles(Roles[] roles) {
         this.roles = roles;
     }
-
-    @ElementCollection(targetClass=Friendship.class)
-    @CollectionTable(
-            name="friendship",
-            joinColumns=@JoinColumn(name="user_a"))
-    private Set<Friendship> sent;
-
-    @ElementCollection(targetClass=Friendship.class)
-    @CollectionTable(
-            name="friendship",
-            joinColumns=@JoinColumn(name="user_b"))
-    private Set<Friendship> received;
 }

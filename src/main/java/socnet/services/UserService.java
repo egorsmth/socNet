@@ -1,5 +1,6 @@
 package socnet.services;
 
+import socnet.entities.Friendship;
 import socnet.entities.User;
 
 import javax.ejb.LocalBean;
@@ -8,8 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Stateless
 @LocalBean
@@ -39,7 +42,6 @@ public class UserService {
     }
 
     public User findOne(String name, String pass) {
-        // TODO: 8/12/2020 make query 
         Query query = em.createQuery(
                 "SELECT e FROM User e WHERE e.name = :name AND e.password = :pass",
                 User.class)
@@ -50,5 +52,14 @@ public class UserService {
             return null;
         }
         return (User) res.get(0);
+    }
+
+    public Set<User> getFriends(User u) {
+        Query query = em.createQuery(
+                "SELECT u FROM User u JOIN Friendship f ON f.user_a = :cur OR f.user_b = :cur WHERE u.id != :cur",
+                User.class)
+                .setParameter("cur", u.getId());
+        List res = query.getResultList();
+        return new HashSet<User>(res);
     }
 }

@@ -47,6 +47,8 @@ public class UserInfo extends PredefinedContextServlet {
             dict.put("other_user", u.get());
             dict.put("logoutUrl", req.getContextPath() + "/logout");
             dict.put("homeUrl", req.getContextPath() + "/personal");
+            // TODO: add logic to handle friendship
+            dict.put("friendRequestUrl", req.getContextPath() + "/sendFriendRequest?userId=" + u.get().getId());
             temp.process(dict, pw);
         } catch (TemplateException e) {
             e.printStackTrace();

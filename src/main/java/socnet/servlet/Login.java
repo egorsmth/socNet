@@ -62,6 +62,8 @@ public class Login extends PredefinedContextServlet {
         {
             req.getSession().setAttribute("user_id", String.valueOf(user.get().getId()));
             resp.sendRedirect(req.getContextPath() + "/personal");
+            return;
         }
+        resp.sendRedirect("/login");
     }
 }
