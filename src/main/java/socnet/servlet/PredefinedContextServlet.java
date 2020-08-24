@@ -1,5 +1,6 @@
 package socnet.servlet;
 
+import socnet.entities.User;
 import socnet.utils.PermissionUtils;
 import socnet.utils.Roles;
 
@@ -33,5 +34,13 @@ public class PredefinedContextServlet extends HttpServlet {
             } catch (NoSuchMethodException ignored) { }
         }
         ctx.setAttribute("permissions", perms);
+    }
+
+    protected User getSessionUser(HttpServletRequest req) {
+        Object user = req.getAttribute("user_obj");
+        if (!(user instanceof User)) {
+            throw new RuntimeException("User not found in session");
+        }
+        return (User) user;
     }
 }

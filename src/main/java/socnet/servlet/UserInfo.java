@@ -26,10 +26,7 @@ public class UserInfo extends PredefinedContextServlet {
     @Perms({Roles.AUTH})
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getAttribute("user_obj");
-        if (user == null) {
-            throw new RuntimeException("User not found in session");
-        }
+        User user = getSessionUser(req);
 
         long userId = Long.parseLong(req.getParameter("userId"));
         Optional<User> u = us.findById(userId);

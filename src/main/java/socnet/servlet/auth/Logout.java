@@ -1,5 +1,7 @@
-package socnet.servlet;
+package socnet.servlet.auth;
 
+import socnet.servlet.Perms;
+import socnet.servlet.PredefinedContextServlet;
 import socnet.utils.Roles;
 
 import javax.servlet.ServletException;

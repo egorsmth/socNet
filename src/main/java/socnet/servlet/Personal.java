@@ -28,10 +28,7 @@ public class Personal extends PredefinedContextServlet {
     @Perms({Roles.AUTH})
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User u = (User) req.getAttribute("user_obj");
-        if (u == null) {
-            throw new RuntimeException("User not found in session");
-        }
+        User u = getSessionUser(req);
 
         resp.setContentType("text/html");
         Writer pw = resp.getWriter();

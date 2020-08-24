@@ -1,10 +1,12 @@
-package socnet.servlet;
+package socnet.servlet.auth;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import socnet.entities.User;
 import socnet.services.AuthService;
+import socnet.servlet.Perms;
+import socnet.servlet.PredefinedContextServlet;
 import socnet.utils.Roles;
 
 import javax.ejb.EJB;
@@ -61,7 +63,7 @@ public class Login extends PredefinedContextServlet {
         if (user.isPresent())
         {
             req.getSession().setAttribute("user_id", String.valueOf(user.get().getId()));
-            resp.sendRedirect(req.getContextPath() + "/personal");
+            resp.sendRedirect("personal");
             return;
         }
         resp.sendRedirect("/login");

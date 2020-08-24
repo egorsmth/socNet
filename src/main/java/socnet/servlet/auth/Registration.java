@@ -1,4 +1,4 @@
-package socnet.servlet;
+package socnet.servlet.auth;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -6,6 +6,8 @@ import freemarker.template.TemplateException;
 import socnet.entities.User;
 import socnet.services.AuthService;
 import socnet.services.UserService;
+import socnet.servlet.Perms;
+import socnet.servlet.PredefinedContextServlet;
 import socnet.utils.Either;
 import socnet.utils.Roles;
 import socnet.utils.SecurityUtils;
@@ -50,7 +52,6 @@ public class Registration extends PredefinedContextServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String name = req.getParameter("name");
         String pass = req.getParameter("password");
-
 
         Either<User, Set<ConstraintViolation<User>>> either = authService.register(name, pass);
         if (either.isLefty()) {

@@ -41,6 +41,9 @@ public class FriendsActionService {
         }
 
         Friendship fs = em.find(Friendship.class, fid);
+        if (fs == null) {
+            throw new RuntimeException("There is no friend request from userId: " + from.getId());
+        }
         fs.setStatus(FriendshipStatus.FRIENDS);
         em.persist(fs);
     }
