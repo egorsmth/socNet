@@ -1,5 +1,6 @@
 package socnet.entities;
 
+import socnet.chat.enteties.Room;
 import socnet.utils.Roles;
 
 import javax.persistence.*;
@@ -63,4 +64,11 @@ public class User {
     public void setRoles(Roles[] roles) {
         this.roles = roles;
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "chatroom_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_id"))
+    Set<Room> chatRooms;
 }

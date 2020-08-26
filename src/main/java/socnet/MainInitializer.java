@@ -38,34 +38,4 @@ public class MainInitializer implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
     }
-
-//    private Connection connectDb()
-//    {
-//        Connection c = null;
-//        String s = "SELECT name FROM public.users";
-//
-//        try
-//        {
-//            Class.forName("org.postgresql.Driver");
-//            c = DriverManager.getConnection(
-//                    "jdbc:postgresql://localhost:5432/testdb",
-//                    "admin", "1234");
-//            System.out.println("Database Connected ..");
-//
-//            try (
-//                    Statement stmt = c.createStatement();
-//                    ResultSet r = stmt.executeQuery(s);)
-//            {
-//
-//                while (r.next()) {
-//                    System.out.println(r.getString(1));
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
-//            System.exit(0);
-//        }
-//        return c;
-//    }
 }
