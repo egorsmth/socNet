@@ -6,7 +6,7 @@ import socnet.utils.Roles;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "soc_user")
@@ -70,5 +70,6 @@ public class User {
             name = "chatroom_user",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "room_id"))
-    Set<Room> chatRooms;
+    @OrderBy("lastMessageAt")
+    List<Room> chatRooms;
 }

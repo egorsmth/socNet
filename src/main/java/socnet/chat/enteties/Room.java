@@ -3,6 +3,7 @@ package socnet.chat.enteties;
 import socnet.entities.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
@@ -19,4 +20,9 @@ public class Room {
 
     @ManyToMany(mappedBy = "chatRooms")
     private Set<User> users;
+
+    private Timestamp lastMessageAt;
+
+    @Enumerated
+    private RoomStatus status;
 }

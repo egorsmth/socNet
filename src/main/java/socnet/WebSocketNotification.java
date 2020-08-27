@@ -4,6 +4,7 @@ import socnet.chat.Message;
 import socnet.chat.MessageDecoder;
 import socnet.chat.MessageEncoder;
 
+import javax.ejb.EJB;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -13,19 +14,22 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(
-        value="/chat/{roomId}",
+        value="/notification/{userId}",
         decoders = MessageDecoder.class,
         encoders = MessageEncoder.class )
-public class WebSocketChat {
+public class WebSocketNotification {
+    @EJB
+    AmqpConn conn;
+
     private Session session;
-    private static Set<WebSocketChat> chatEndpoints
+    private static Set<WebSocketNotification> chatEndpoints
             = new CopyOnWriteArraySet<>();
     private static HashMap<String, String> users = new HashMap<>();
 
     @OnOpen
     public void onOpen(
             Session session,
-            @PathParam("roomId") String roomId) throws IOException, EncodeException {
+            @PathParam("userId") String userId) throws IOException, EncodeException {
 
         this.session = session;
         chatEndpoints.add(this);
@@ -34,6 +38,7 @@ public class WebSocketChat {
         message.setAuthor(roomId); // TODO: wrong logic
         message.setContent("Connected!");
         broadcast(message);
+        broadcast();
     }
 
     @OnMessage

@@ -8,6 +8,9 @@
         <jta-data-source>jdbc/testdb</jta-data-source>
         <class>socnet.entities.User</class>
         <class>socnet.entities.Friendship</class>
+        <class>socnet.entities.Friend</class>
+        <class>socnet.chat.enteties.Message</class>
+        <class>socnet.chat.enteties.Room</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action"
                       value="create"/>

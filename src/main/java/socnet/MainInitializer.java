@@ -1,5 +1,8 @@
 package socnet;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.log4j.PropertyConfigurator;
@@ -9,8 +12,10 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 @WebListener
 public class MainInitializer implements ServletContextListener {
